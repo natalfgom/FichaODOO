@@ -255,6 +255,7 @@ async def cmd_estado(interaction: discord.Interaction):
 
 @bot.tree.command(name="ayuda", description="Muestra los comandos del bot de fichaje")
 async def cmd_ayuda(interaction: discord.Interaction):
+    await interaction.response.defer()
     embed = discord.Embed(title="🤖 Bot de Fichaje Odoo", color=0x00e5a0)
     embed.add_field(name="/entrada", value="Registra tu entrada ahora", inline=False)
     embed.add_field(name="/salida",  value="Registra tu salida ahora",  inline=False)
