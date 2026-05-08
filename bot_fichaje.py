@@ -48,6 +48,7 @@ FRANJAS = [
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.guilds = True
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 scheduler = AsyncIOScheduler(timezone="Europe/Madrid")
 
@@ -275,9 +276,16 @@ async def cmd_ayuda(interaction: discord.Interaction):
 async def on_ready():
     print(f"Bot conectado como {bot.user}")
 
-    # Sincronizar comandos slash
-    await bot.tree.sync()
-    print("Comandos slash sincronizados")
+    # Sincronizar comandos slash globalmente Y por cada servidor (instantáneo)
+    try:
+        synced = await bot.tree.sync()
+        print(f"Comandos slash globales sincronizados: {len(synced)}")
+        for guild in bot.guilds:
+            bot.tree.copy_global_to(guild=guild)
+            await bot.tree.sync(guild=guild)
+            print(f"Comandos sincronizados en servidor: {guild.name}")
+    except Exception as e:
+        print(f"Error sincronizando comandos: {e}")
 
     # Programar fichajes automáticos L-V
     # Franja 1: dispara a las 09:00 (hora Madrid)
