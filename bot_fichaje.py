@@ -26,6 +26,7 @@ import xmlrpc.client
 import datetime
 import random
 import os
+import ssl
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -67,11 +68,22 @@ def a_utc(dt_local):
 
 
 def conectar():
-    common = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/common")
+    # Contexto SSL sin verificación (necesario si el servidor Odoo tiene cert autofirmado)
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    common = xmlrpc.client.ServerProxy(
+        f"{ODOO_URL}/xmlrpc/2/common",
+        context=ctx
+    )
     uid = common.authenticate(ODOO_DB, ODOO_USER, ODOO_PASS, {})
     if not uid:
         raise ValueError("Autenticación fallida en Odoo.")
-    models = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/object")
+    models = xmlrpc.client.ServerProxy(
+        f"{ODOO_URL}/xmlrpc/2/object",
+        context=ctx
+    )
     return uid, models
 
 
