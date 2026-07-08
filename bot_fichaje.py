@@ -42,8 +42,9 @@ ODOO_PASS = os.getenv("ODOO_PASS", "1129INGSalud")
 
 # Franjas: (hora_entrada, hora_salida)
 FRANJAS = [
-    ("09:00", "14:00"),  # Franja 1 - mañana
-    ("16:00", "19:00"),  # Franja 2 - tarde
+    #("09:00", "14:00"),  # Franja 1 - mañana
+    #("16:00", "19:00"),  # Franja 2 - tarde
+    ("08:00", "15:00"),
 ]
 # ──────────────────────────────────────────────────────────────
 
@@ -304,17 +305,17 @@ async def on_ready():
     # Franja 1: dispara a las 09:00 (hora Madrid)
     scheduler.add_job(
         fichar_automatico,
-        CronTrigger(day_of_week="mon-fri", hour=9, minute=0, timezone="Europe/Madrid"),
+        CronTrigger(day_of_week="mon-fri", hour=9, minute=15, timezone="Europe/Madrid"),
         args=[0],
         id="franja1"
     )
     # Franja 2: dispara a las 16:00 (hora Madrid)
-    scheduler.add_job(
-        fichar_automatico,
-        CronTrigger(day_of_week="mon-fri", hour=16, minute=0, timezone="Europe/Madrid"),
-        args=[1],
-        id="franja2"
-    )
+    #scheduler.add_job(
+    #    fichar_automatico,
+    #    CronTrigger(day_of_week="mon-fri", hour=16, minute=0, timezone="Europe/Madrid"),
+    #    args=[1],
+    #    id="franja2"
+    #)
     scheduler.start()
     print("Scheduler iniciado: Franja1 09:00 | Franja2 16:00 (L-V, Europa/Madrid)")
 
