@@ -42,9 +42,8 @@ ODOO_PASS = os.getenv("ODOO_PASS", "1129INGSalud")
 
 # Franjas: (hora_entrada, hora_salida)
 FRANJAS = [
-    #("09:00", "14:00"),  # Franja 1 - mañana
-    #("16:00", "19:00"),  # Franja 2 - tarde
-    ("08:00", "15:00"),
+    ("09:00", "14:00"),  # Franja 1 - mañana
+    ("16:00", "19:00"),  # Franja 2 - tarde
 ]
 # ──────────────────────────────────────────────────────────────
 
@@ -275,7 +274,7 @@ async def cmd_ayuda(interaction: discord.Interaction):
     embed.add_field(name="/estado",  value="Ver tu último fichaje",      inline=False)
     embed.add_field(
         name="⏰ Automático",
-        value="09:00 → Franja 1 (08:xx – 15:xx)\n16:00 → Franja 2 (16:xx – 19:xx)\nSolo Lunes a Viernes",
+        value="09:00 → Franja 1 (09:xx – 14:xx)\n16:00 → Franja 2 (16:xx – 19:xx)\nSolo Lunes a Viernes",
         inline=False
     )
     embed.set_footer(text="Variación aleatoria de 0-5 min aplicada en cada fichaje")
@@ -302,22 +301,15 @@ async def on_ready():
         print(f"Error sincronizando comandos: {e}")
 
     # Programar fichajes automáticos L-V
-    # Franja 1: dispara a las 09:00 (hora Madrid)
+    # Franja 1: dispara a las 08:00 (hora Madrid)
     scheduler.add_job(
         fichar_automatico,
-        CronTrigger(day_of_week="mon-fri", hour=9, minute=18, timezone="Europe/Madrid"),
+        CronTrigger(day_of_week="mon-fri", hour=8, minute=0, timezone="Europe/Madrid"),
         args=[0],
         id="franja1"
     )
-    # Franja 2: dispara a las 16:00 (hora Madrid)
-    #scheduler.add_job(
-    #    fichar_automatico,
-    #    CronTrigger(day_of_week="mon-fri", hour=16, minute=0, timezone="Europe/Madrid"),
-    #    args=[1],
-    #    id="franja2"
-    #)
     scheduler.start()
-    print("Scheduler iniciado: Franja1 09:00 | Franja2 16:00 (L-V, Europa/Madrid)")
+    print("Scheduler iniciado: Franja1 08:00 → 15:00 (L-V, Europa/Madrid)")
 
     canal = bot.get_channel(CANAL_FICHAJE)
     if canal:
