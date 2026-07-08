@@ -304,7 +304,7 @@ async def on_ready():
     # Franja 1: dispara a las 08:00 (hora Madrid)
     scheduler.add_job(
         fichar_automatico,
-        CronTrigger(day_of_week="mon-fri", hour=9, minute=27, timezone="Europe/Madrid"),
+        CronTrigger(day_of_week="mon-fri", hour=9, minute=29, timezone="Europe/Madrid"),
         args=[0],
         id="franja1"
     )
