@@ -274,7 +274,7 @@ async def cmd_ayuda(interaction: discord.Interaction):
     embed.add_field(name="/estado",  value="Ver tu último fichaje",      inline=False)
     embed.add_field(
         name="⏰ Automático",
-        value="09:00 → Franja 1 (09:xx – 14:xx)\n16:00 → Franja 2 (16:xx – 19:xx)\nSolo Lunes a Viernes",
+        value="08:00 → Fichaje diario (08:xx – 15:xx)\nSolo Lunes a Viernes",
         inline=False
     )
     embed.set_footer(text="Variación aleatoria de 0-5 min aplicada en cada fichaje")
@@ -304,7 +304,7 @@ async def on_ready():
     # Franja 1: dispara a las 08:00 (hora Madrid)
     scheduler.add_job(
         fichar_automatico,
-        CronTrigger(day_of_week="mon-fri", hour=9, minute=21, timezone="Europe/Madrid"),
+        CronTrigger(day_of_week="mon-fri", hour=9, minute=27, timezone="Europe/Madrid"),
         args=[0],
         id="franja1"
     )
